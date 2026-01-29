@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Grab 555 Lucky Spin</title>
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #111;
+  color: #fff;
+}
+button {
+  padding: 15px 30px;
+  font-size: 20px;
+  background: gold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#result {
+  margin-top: 30px;
+  font-size: 28px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎡 Grab 555 Lucky Spin 🎡</h1>
+<p>Tekan butang untuk spin & menangi FREE CREDIT!</p>
+
+<button onclick="spin()">SPIN SEKARANG</button>
+
+<div id="result"></div>
+
+<script>
+function spin(){
+  const rewards = [
+    "TRY AGAIN 😢",
+    "RM1 FREE CREDIT 💰",
+    "RM2 FREE CREDIT 💰",
+    "RM3 FREE CREDIT 💰",
+    "RM5 FREE CREDIT 🔥",
+    "RM10 FREE CREDIT 🎉"
+  ];
+  const pick = rewards[Math.floor(Math.random()*rewards.length)];
+  document.getElementById("result").innerHTML =
+    "TAHNIAH!<br><br>" + pick +
+    "<br><br>📸 Screenshot & WhatsApp CS untuk claim";
+}
+</script>
+
+</body>
+</html>
