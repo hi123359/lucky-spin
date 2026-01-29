@@ -3,31 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <title>Grab 555 Lucky Spin</title>
+
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   text-align: center;
-  background: #111;
+  background: radial-gradient(circle, #222, #000);
   color: #fff;
+  margin-top: 80px;
 }
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
 button {
-  padding: 15px 30px;
-  font-size: 20px;
+  padding: 18px 40px;
+  font-size: 22px;
   background: gold;
+  color: #000;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px;
 }
+
+button:hover {
+  background: orange;
+}
+
 #result {
-  margin-top: 30px;
+  margin-top: 40px;
   font-size: 28px;
+  min-height: 80px;
 }
 </style>
 </head>
+
 <body>
 
 <h1>🎡 Grab 555 Lucky Spin 🎡</h1>
-<p>Tekan butang untuk spin & menangi FREE CREDIT!</p>
+<p>Spin & menangi FREE CREDIT sehingga RM10!</p>
+
+<p>🎁 Hadiah yang tersedia:</p>
+<ul>
+  <li>RM1 FREE CREDIT</li>
+  <li>RM2 FREE CREDIT</li>
+  <li>RM3 FREE CREDIT</li>
+  <li>RM5 FREE CREDIT</li>
+  <li>RM10 FREE CREDIT</li>
+</ul>
 
 <button onclick="spin()">SPIN SEKARANG</button>
 
@@ -35,18 +74,26 @@ button {
 
 <script>
 function spin(){
-  const rewards = [
+  document.getElementById("result").innerHTML = "🎡 Spinning...";
+
+  // REAL PAYOUT (CONTROL COST) – MAX RM3
+  const realRewards = [
+    "TRY AGAIN 😢",
+    "TRY AGAIN 😢",
     "TRY AGAIN 😢",
     "RM1 FREE CREDIT 💰",
+    "RM1 FREE CREDIT 💰",
     "RM2 FREE CREDIT 💰",
-    "RM3 FREE CREDIT 💰",
-    "RM5 FREE CREDIT 🔥",
-    "RM10 FREE CREDIT 🎉"
+    "RM2 FREE CREDIT 💰",
+    "RM3 FREE CREDIT 🔥"
   ];
-  const pick = rewards[Math.floor(Math.random()*rewards.length)];
-  document.getElementById("result").innerHTML =
-    "TAHNIAH!<br><br>" + pick +
-    "<br><br>📸 Screenshot & WhatsApp CS untuk claim";
+
+  setTimeout(function(){
+    const pick = realRewards[Math.floor(Math.random()*realRewards.length)];
+    document.getElementById("result").innerHTML =
+      "TAHNIAH!<br><br>" + pick +
+      "<br><br>📸 Screenshot & WhatsApp CS untuk claim";
+  }, 2000);
 }
 </script>
 
