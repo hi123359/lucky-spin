@@ -3,53 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <title>Grab 555 Lucky Spin</title>
-
 <style>
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: radial-gradient(circle, #222, #000);
-  color: #fff;
-  margin-top: 80px;
+  background:#111;
+  color:white;
+  text-align:center;
+  font-family:Arial;
 }
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
+canvas {
+  margin-top:30px;
 }
-
-p {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  font-size: 16px;
-  opacity: 0.8;
-}
-
 button {
-  padding: 18px 40px;
-  font-size: 22px;
-  background: gold;
-  color: #000;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 20px;
+  margin-top:20px;
+  padding:15px 35px;
+  font-size:20px;
+  background:gold;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
 }
-
-button:hover {
-  background: orange;
-}
-
 #result {
-  margin-top: 40px;
-  font-size: 28px;
-  min-height: 80px;
+  margin-top:25px;
+  font-size:26px;
 }
 </style>
 </head>
@@ -59,41 +35,101 @@ button:hover {
 <h1>🎡 Grab 555 Lucky Spin 🎡</h1>
 <p>Spin & menangi FREE CREDIT sehingga RM10!</p>
 
-<p>🎁 Hadiah yang tersedia:</p>
-<ul>
-  <li>RM1 FREE CREDIT</li>
-  <li>RM2 FREE CREDIT</li>
-  <li>RM3 FREE CREDIT</li>
-  <li>RM5 FREE CREDIT</li>
-  <li>RM10 FREE CREDIT</li>
-</ul>
-
+<canvas id="wheel" width="400" height="400"></canvas>
+<br>
 <button onclick="spin()">SPIN SEKARANG</button>
 
 <div id="result"></div>
 
 <script>
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+const displayRewards = [
+ "RM1","RM2","RM3","RM5","RM10",
+ "RM1","RM2","RM3","RM5","RM10"
+];
+
+// REAL PAYOUT (CONTROL COST)
+const realRewards = [
+ "TRY AGAIN",
+ "RM1 FREE CREDIT",
+ "RM1 FREE CREDIT",
+ "RM2 FREE CREDIT",
+ "RM2 FREE CREDIT",
+ "RM3 FREE CREDIT"
+];
+
+let angle = 0;
+let spinning = false;
+
+function drawWheel(){
+  const slices = displayRewards.length;
+  const arc = 2 * Math.PI / slices;
+
+  for(let i=0;i<slices;i++){
+    ctx.beginPath();
+    ctx.fillStyle = i%2==0 ? "#f1c40f" : "#e67e22";
+    ctx.moveTo(200,200);
+    ctx.arc(200,200,180,arc*i,arc*(i+1));
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(200,200);
+    ctx.rotate(arc*i + arc/2);
+    ctx.fillStyle="#000";
+    ctx.font="18px Arial";
+    ctx.fillText(displayRewards[i],100,10);
+    ctx.restore();
+  }
+
+  // pointer
+  ctx.fillStyle="red";
+  ctx.beginPath();
+  ctx.moveTo(200,10);
+  ctx.lineTo(190,40);
+  ctx.lineTo(210,40);
+  ctx.fill();
+}
+
+drawWheel();
+
 function spin(){
-  document.getElementById("result").innerHTML = "🎡 Spinning...";
+  if(spinning) return;
+  spinning=true;
+  let spinAngle = Math.random()*3000 + 2000;
+  let start = angle;
+  let end = start + spinAngle;
+  let duration = 3000;
+  let startTime = null;
 
-  // REAL PAYOUT (CONTROL COST) – MAX RM3
-  const realRewards = [
-    "TRY AGAIN 😢",
-    "TRY AGAIN 😢",
-    "TRY AGAIN 😢",
-    "RM1 FREE CREDIT 💰",
-    "RM1 FREE CREDIT 💰",
-    "RM2 FREE CREDIT 💰",
-    "RM2 FREE CREDIT 💰",
-    "RM3 FREE CREDIT 🔥"
-  ];
+  function animate(time){
+    if(!startTime) startTime=time;
+    let progress = time-startTime;
+    angle = start + (end-start)*(progress/duration);
+    ctx.clearRect(0,0,400,400);
+    ctx.save();
+    ctx.translate(200,200);
+    ctx.rotate(angle*Math.PI/180);
+    ctx.translate(-200,-200);
+    drawWheel();
+    ctx.restore();
 
-  setTimeout(function(){
-    const pick = realRewards[Math.floor(Math.random()*realRewards.length)];
-    document.getElementById("result").innerHTML =
-      "TAHNIAH!<br><br>" + pick +
-      "<br><br>📸 Screenshot & WhatsApp CS untuk claim";
-  }, 2000);
+    if(progress < duration){
+      requestAnimationFrame(animate);
+    } else {
+      spinning=false;
+      showResult();
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function showResult(){
+  const reward = realRewards[Math.floor(Math.random()*realRewards.length)];
+  document.getElementById("result").innerHTML =
+   "TAHNIAH!<br><br>" + reward +
+   "<br><br>📸 Screenshot & WhatsApp CS untuk claim";
 }
 </script>
 
