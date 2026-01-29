@@ -4,11 +4,38 @@
 <meta charset="UTF-8">
 <title>Grab 555 Lucky Spin</title>
 <style>
-body {background:#111;color:#fff;text-align:center;font-family:Arial;}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial;
+  color:#fff;
+  text-align:center;
+  /* GANTI URL GAMBAR BACKGROUND KAU */
+  background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+  url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600") center/cover no-repeat fixed;
+}
+
 h1{margin-top:30px}
-canvas{display:block;margin:20px auto}
-button{padding:14px 32px;font-size:20px;background:gold;border:0;border-radius:10px;font-weight:bold}
+canvas{
+  display:block;
+  margin:20px auto;
+  filter: drop-shadow(0 0 15px gold);
+}
+button{
+  padding:14px 32px;
+  font-size:20px;
+  background:gold;
+  border:0;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:disabled{
+  background:#555;
+  cursor:not-allowed;
+}
 #result{margin-top:20px;font-size:24px}
+.small{font-size:12px;opacity:.7}
 </style>
 </head>
 
@@ -17,25 +44,31 @@ button{padding:14px 32px;font-size:20px;background:gold;border:0;border-radius:1
 <p>Spin & menangi FREE CREDIT sehingga RM10!</p>
 
 <canvas id="wheel" width="360" height="360"></canvas>
-<button onclick="spin()">SPIN SEKARANG</button>
+<button id="spinBtn" onclick="spin()">SPIN SEKARANG</button>
 <div id="result"></div>
+<p class="small">*1 device hanya boleh spin sekali</p>
 
 <script>
 const c = document.getElementById("wheel");
 const ctx = c.getContext("2d");
 
 const labels = ["RM1","RM2","RM3","RM5","RM10","RM1","RM2","RM3","RM5","RM10"];
+// REAL PAYOUT (CONTROL COST)
 const real = ["TRY AGAIN","RM1 FREE CREDIT","RM1 FREE CREDIT","RM2 FREE CREDIT","RM2 FREE CREDIT","RM3 FREE CREDIT"];
 
 let angle=0, spinning=false;
 
+// DRAW WHEEL
 function draw(){
   const n = labels.length;
   const arc = 2*Math.PI/n;
   ctx.clearRect(0,0,360,360);
   for(let i=0;i<n;i++){
     ctx.beginPath();
-    ctx.fillStyle = i%2? "#f39c12":"#f1c40f";
+    const grad = ctx.createRadialGradient(180,180,20,180,180,160);
+    grad.addColorStop(0, i%2?"#ffd65a":"#ffb703");
+    grad.addColorStop(1, i%2?"#f39c12":"#f1c40f");
+    ctx.fillStyle = grad;
     ctx.moveTo(180,180);
     ctx.arc(180,180,160,arc*i,arc*(i+1));
     ctx.fill();
@@ -44,7 +77,7 @@ function draw(){
     ctx.translate(180,180);
     ctx.rotate(arc*i+arc/2);
     ctx.fillStyle="#000";
-    ctx.font="16px Arial";
+    ctx.font="bold 16px Arial";
     ctx.fillText(labels[i],90,8);
     ctx.restore();
   }
@@ -55,8 +88,16 @@ function draw(){
 }
 draw();
 
+// 1 SPIN ONLY (LOCK)
+const hasSpun = localStorage.getItem("grab555_spun");
+if(hasSpun){
+  document.getElementById("spinBtn").disabled = true;
+  document.getElementById("result").innerHTML =
+   "❌ Anda sudah spin.<br>Terima kasih!";
+}
+
 function spin(){
-  if(spinning) return;
+  if(spinning || hasSpun) return;
   spinning=true;
   const target = Math.random()*3000+2000;
   const start = angle;
@@ -84,6 +125,8 @@ function show(){
   const r = real[Math.floor(Math.random()*real.length)];
   document.getElementById("result").innerHTML =
   "TAHNIAH!<br><br>"+r+"<br><br>📸 Screenshot & WhatsApp CS untuk claim";
+  localStorage.setItem("grab555_spun","1");
+  document.getElementById("spinBtn").disabled = true;
 }
 </script>
 </body>
